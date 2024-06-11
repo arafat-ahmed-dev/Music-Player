@@ -78,30 +78,14 @@ play.addEventListener("click",()=>{
 backwardButton.addEventListener("click", ()=>{
     if(currentSongIndex > 0){
         currentSongIndex--;
-        let prevSong = musicArr[currentSongIndex];
-        songname.textContent = prevSong.title;
-        artistname.textContent = prevSong.artist;
-        duration.textContent = prevSong.duration;
-        playsongimg.src = prevSong.imglink;
-        audio.src = prevSong.url;
-        audio.play();
-        play.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-        playsongimg.classList.add("animation");
+        updateSongInfo(currentSongIndex);
     }
 });
 
 forwardButton.addEventListener("click", ()=>{
     if(currentSongIndex < musicArr.length - 1){
         currentSongIndex++;
-        let nextSong = musicArr[currentSongIndex];
-        songname.textContent = nextSong.title;
-        artistname.textContent = nextSong.artist;
-        duration.textContent = nextSong.duration;
-        playsongimg.src = nextSong.imglink;
-        audio.src = nextSong.url;
-        audio.play();
-        play.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-        playsongimg.classList.add("animation");
+        updateSongInfo(currentSongIndex);
     }
 });
 
@@ -139,14 +123,16 @@ function formatTime(timeInSeconds) {
 }
 function playNextSong() {
     currentSongIndex = (currentSongIndex + 1) % musicArr.length;
-    const nextSong = musicArr[currentSongIndex];
-
-    audio.src = nextSong.url;
+    updateSongInfo(currentSongIndex);
+}
+function updateSongInfo(songIndex) {
+    const song = musicArr[songIndex];
+    songname.textContent = song.title;
+    artistname.textContent = song.artist;
+    duration.textContent = song.duration;
+    playsongimg.src = song.imglink;
+    audio.src = song.url;
     audio.play();
-    songname.textContent = nextSong.title;
-    artistname.textContent = nextSong.artist;
-    duration.textContent = nextSong.duration;
-    playsongimg.src = nextSong.imglink;
-    // Update UI elements (song name, artist, duration, etc.) for the next song
-    // You can add this logic here based on your existing code
+    play.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+    playsongimg.classList.add("animation");
 }
