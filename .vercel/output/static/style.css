@@ -189,4 +189,5 @@ main{
     border-radius: 5px;
     pointer-events: none;
     object-fit: cover;
-    objec
+    object-position: center;
+}
