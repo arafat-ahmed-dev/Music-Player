@@ -1,17 +1,20 @@
 const musicArr = [
-    {title:"Faded - Alan Walker", artist:"Alan Walker", url:"./audio/Alan Walker  Faded.mp3", imglink:"./img/faded.jpeg" ,duration:"3:45"},
-    {title:"Hookah bar", artist:" Himesh Reshammiya", url:"./audio/Hookah Bar  Khiladi 786  Akshay Kumar  Asin  Himesh Reshammiya.mp3", imglink:"./img/Hookah bar.jpeg" ,duration:"3:45"},
-    {title:"Tu Hai kaha", artist:"Ahad Khan, Usama Ali, and ZAYN", url:"./audio/AUR  TU HAI KAHAN  Raffey  Usama  Ahad Official Music Video.mp3", imglink:"./img/Tu hai kaha.jpeg" ,duration:"3:45"},
-    {title:"Sia - Unstopable", artist:"Sia", url:"./audio/Sia  Unstoppable Official Video  Live from the Nostalgic For The Present Tour.mp3", imglink:"./img/unstopable.jpeg" ,duration:"3:45"},
-    {title:"Ve Kamleya", artist:"Arijit Singh", url:"./audio/Ve Kamleya  Rocky Aur Rani Kii Prem Kahaani  Ranveer  Alia  Pritam  Amitabh  Arijit  Shreya.mp3", imglink:"./img/ve kamleya.jpeg" ,duration:"3:45"}
+    {title:"Faded - Alan Walker", artist:"Alan Walker", url:"./audio/Alan Walker  Faded.mp3", imglink:"./img/faded.jpeg" ,duration:"3:32"},
+    {title:"Hookah bar", artist:" Himesh Reshammiya", url:"./audio/Hookah Bar  Khiladi 786  Akshay Kumar  Asin  Himesh Reshammiya.mp3", imglink:"./img/Hookah bar.jpeg" ,duration:"2:54"},
+    {title:"Tu Hai kaha", artist:"Ahad Khan, Usama Ali, and ZAYN", url:"./audio/AUR  TU HAI KAHAN  Raffey  Usama  Ahad Official Music Video.mp3", imglink:"./img/Tu hai kaha.jpeg" ,duration:"4:23"},
+    {title:"Sia - Unstopable", artist:"Sia", url:"./audio/Sia  Unstoppable Official Video  Live from the Nostalgic For The Present Tour.mp3", imglink:"./img/unstopable.jpeg" ,duration:"4:46"},
+    {title:"Ve Kamleya", artist:"Arijit Singh", url:"./audio/Ve Kamleya  Rocky Aur Rani Kii Prem Kahaani  Ranveer  Alia  Pritam  Amitabh  Arijit  Shreya.mp3", imglink:"./img/ve kamleya.jpeg" ,duration:"3:09"}
 ];
 const songbox = document.querySelector(".music-list");
 const songname = document.querySelector(".name");
 const artistname = document.querySelector(".artist");
+const duration = document.querySelector(".duration");
 const playsongimg = document.querySelector(".music-img>img");
 const play = document.querySelector(".play");
 const backwardButton = document.querySelector(".backward");
 const forwardButton = document.querySelector(".forward");
+const seekbar = document.querySelector(".seek");
+const currentTimeDisplay = document.querySelector(".current-time");
 
 let clutter = ""
 musicArr.forEach((elem, index)=>{
@@ -31,9 +34,9 @@ songbox.addEventListener("click", (obj)=>{
     let filterduration = musicArr[imgextract].duration;
     songname.textContent = filtertitle;
     artistname.textContent = filterartist;
+    duration.textContent = filterduration;
     playsongimg.src = filterimgurl;
     audio.src = filter
-    console.log(filter);
     audio.play()
     play.innerHTML = `<i class="fa-solid fa-pause"></i>`
     if (audio.play) {
@@ -51,6 +54,7 @@ play.addEventListener("click",()=>{
         let firstSong = musicArr[0];
         songname.textContent = firstSong.title;
         artistname.textContent = firstSong.artist;
+        duration.textContent = firstSong.duration;
         playsongimg.src = firstSong.imglink;
         audio.src = firstSong.url;
         audio.play();
@@ -74,27 +78,61 @@ play.addEventListener("click",()=>{
 backwardButton.addEventListener("click", ()=>{
     if(currentSongIndex > 0){
         currentSongIndex--;
-        let prevSong = musicArr[currentSongIndex];
-        songname.textContent = prevSong.title;
-        artistname.textContent = prevSong.artist;
-        playsongimg.src = prevSong.imglink;
-        audio.src = prevSong.url;
-        audio.play();
-        play.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-        playsongimg.classList.add("animation");
+        updateSongInfo(currentSongIndex);
     }
 });
 
 forwardButton.addEventListener("click", ()=>{
     if(currentSongIndex < musicArr.length - 1){
         currentSongIndex++;
-        let nextSong = musicArr[currentSongIndex];
-        songname.textContent = nextSong.title;
-        artistname.textContent = nextSong.artist;
-        playsongimg.src = nextSong.imglink;
-        audio.src = nextSong.url;
-        audio.play();
-        play.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-        playsongimg.classList.add("animation");
+        updateSongInfo(currentSongIndex);
     }
 });
+
+
+
+audio.addEventListener("timeupdate", updateSeekbar);
+audio.addEventListener("ended", playNextSong);
+
+function updateSeekbar() {
+    const currentTime = audio.currentTime;
+    const duration = audio.duration;
+    const percentage = (currentTime / duration) * 100;
+    seekbar.value = percentage;
+
+    // Update the current time display
+    const formattedCurrentTime = formatTime(currentTime);
+    currentTimeDisplay.textContent = formattedCurrentTime;
+}
+
+seekbar.addEventListener("input", (e) => {
+    const seekTime = (e.target.value / 100) * audio.duration;
+    if (!isNaN(seekTime) && isFinite(seekTime)) {
+        audio.currentTime = seekTime;
+        // Update the current time display immediately
+        const formattedSeekTime = formatTime(seekTime);
+        currentTimeDisplay.textContent = formattedSeekTime;
+    }
+});
+
+// Helper function to format time (e.g., convert seconds to "mm:ss" format)
+function formatTime(timeInSeconds) {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+function playNextSong() {
+    currentSongIndex = (currentSongIndex + 1) % musicArr.length;
+    updateSongInfo(currentSongIndex);
+}
+function updateSongInfo(songIndex) {
+    const song = musicArr[songIndex];
+    songname.textContent = song.title;
+    artistname.textContent = song.artist;
+    duration.textContent = song.duration;
+    playsongimg.src = song.imglink;
+    audio.src = song.url;
+    audio.play();
+    play.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+    playsongimg.classList.add("animation");
+}
