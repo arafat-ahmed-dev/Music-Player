@@ -16,6 +16,8 @@
     }
     .right-side{
         display: none;
+        width: 100%;
+        height: 100%;
     }
     .left-side{
         width: 100%;
@@ -30,5 +32,13 @@
     }
     .control-1{
         width: 100%;
+    }
+    .seek{
+        width: 100%;
+        height: 7px;
+        margin-top: 5px;
+    }
+    .control-1{
+        font-size: 20px;
     }
 }
