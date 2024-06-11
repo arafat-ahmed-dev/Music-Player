@@ -136,3 +136,19 @@ function updateSongInfo(songIndex) {
     play.innerHTML = `<i class="fa-solid fa-pause"></i>`;
     playsongimg.classList.add("animation");
 }
+
+//Responsive logic
+const list = document.querySelector(".list");
+const left = document.querySelector(".left-side");
+const right = document.querySelector(".right-side");
+const exit = document.querySelector(".header i");
+list.addEventListener("click", ()=>{
+    left.style.display ="none";
+    right.style.display="block";
+    exit.style.display="block";
+});
+exit.addEventListener("click", ()=>{
+    left.style.display ="block";
+    right.style.display="none";
+    exit.style.display="none";
+})
