@@ -20,6 +20,8 @@ main{
     width: 70%;
     display: flex;
     background-color: #33393F;
+    border-radius: 20px;
+    overflow: hidden;
 }
 .left-side{
     height: 100%;
@@ -29,6 +31,8 @@ main{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-radius: 15px;
+    box-shadow: 0 0 10px #000000;
 }
 .logo{
     width: 100%;
