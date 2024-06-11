@@ -164,6 +164,7 @@ main{
     line-height: 10px;
     display: none;
     margin-bottom: 5px;
+    cursor: pointer;
 }
 .music-bar{
     width: 100%;
